@@ -1,0 +1,46 @@
+name: CI - Laravel Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  laravel-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: sqlite, pdo_sqlite, mbstring
+
+      - name: Install dependencies
+        run: |
+          cp .env.example .env
+          composer install
+          php artisan key:generate
+
+      - name: Prepare SQLite testing database
+        run: |
+          mkdir -p database
+          touch database/testing.sqlite
+
+      - name: Migrate + Seed Gutendex Dump
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/testing.sqlite
+        run: |
+          php artisan migrate:fresh --seed --seeder=GutendexSeeder
+
+      - name: Run Tests
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/testing.sqlite
+        run: |
+          php artisan test --no-interaction --fail-on-warning --fail-on-risky
