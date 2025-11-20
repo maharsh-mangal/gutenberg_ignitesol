@@ -43,4 +43,4 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/testing.sqlite
         run: |
-          php artisan test --fail-on-warning --fail-on-risky
+          php artisan test --without-views --fail-on-warning --fail-on-risky
