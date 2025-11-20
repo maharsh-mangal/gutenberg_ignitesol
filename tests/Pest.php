@@ -1,5 +1,9 @@
 <?php
 
+use Database\Seeders\FakeDataSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,10 +15,13 @@
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature')
-    ->beforeEach(fn () => $this->withoutVite());
+    ->beforeEach(function () {
+        $this->withoutVite();
+        $this->seed(FakeDataSeeder::class);
+    });
 
 /*
 |--------------------------------------------------------------------------

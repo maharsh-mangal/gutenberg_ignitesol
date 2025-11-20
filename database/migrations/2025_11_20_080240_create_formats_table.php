@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('formats', function (Blueprint $table) {
             $table->id();
-            $table->string('mime_type', 32)->index(); // filtering by format
+            $table->string('mime_type', 32)->index();
             $table->string('url', 256);
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->timestamps();

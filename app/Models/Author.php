@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property int|null $birth_year
  * @property int|null $death_year
  * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Author newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Author newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Author query()
@@ -20,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Author whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Author whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Author whereUpdatedAt($value)
+ *
  * @mixin \Eloquent
  */
 class Author extends Model
