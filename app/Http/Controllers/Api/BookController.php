@@ -13,35 +13,61 @@ class BookController extends Controller
     {
         $query = Book::with(['authors', 'languages', 'subjects', 'bookshelves', 'formats']);
 
+        // Title filter
         if ($request->filled('title')) {
-            $query->where('title', $this->likeOperator(), "%{$request->title}%");
+            $titles = explode(',', $request->title);
+            $query->where(function ($q) use ($titles) {
+                foreach ($titles as $title) {
+                    $q->orWhere('title', $this->likeOperator(), '%'.trim($title).'%');
+                }
+            });
         }
 
+        // Author filter
         if ($request->filled('author')) {
-            $query->whereHas('authors', function ($q) use ($request) {
-                $q->where('name', $this->likeOperator(), "%{$request->author}%");
-            });
-        }
-
-        if ($request->filled('language')) {
-            $query->whereHas('languages', function ($q) use ($request) {
-                $q->where('code', $this->likeOperator(), "%{$request->language}%");
-            });
-        }
-
-        if ($request->filled('mime')) {
-            $query->whereHas('formats', function ($q) use ($request) {
-                $q->where('mime_type', $this->likeOperator(), "%{$request->mime}%");
-            });
-        }
-
-        if ($request->filled('topic')) {
-            $query->where(function ($q) use ($request) {
-                $q->whereHas('subjects', function ($s) use ($request) {
-                    $s->where('name', $this->likeOperator(), "%{$request->topic}%");
-                })->orWhereHas('bookshelves', function ($b) use ($request) {
-                    $b->where('name', $this->likeOperator(), "%{$request->topic}%");
+            $authors = explode(',', $request->author);
+            $query->whereHas('authors', function ($q) use ($authors) {
+                $q->where(function ($q2) use ($authors) {
+                    foreach ($authors as $author) {
+                        $q2->orWhere('name', $this->likeOperator(), '%'.trim($author).'%');
+                    }
                 });
+            });
+        }
+
+        // Language filter
+        if ($request->filled('language')) {
+            $languages = explode(',', $request->language);
+            $query->whereHas('languages', function ($q) use ($languages) {
+                $q->where(function ($q2) use ($languages) {
+                    foreach ($languages as $lang) {
+                        $q2->orWhere('code', $this->likeOperator(), '%'.trim($lang).'%');
+                    }
+                });
+            });
+        }
+
+        // Mime filter
+        if ($request->filled('mime')) {
+            $mimes = explode(',', $request->mime);
+            $query->whereHas('formats', function ($q) use ($mimes) {
+                $q->where(function ($q2) use ($mimes) {
+                    foreach ($mimes as $mime) {
+                        $q2->orWhere('mime_type', $this->likeOperator(), '%'.trim($mime).'%');
+                    }
+                });
+            });
+        }
+
+        // Topic filter (subject OR bookshelf)
+        if ($request->filled('topic')) {
+            $topics = explode(',', $request->topic);
+            $query->where(function ($q) use ($topics) {
+                foreach ($topics as $topic) {
+                    $q->orWhereHas('subjects', fn ($s) => $s->where('name', $this->likeOperator(), '%'.trim($topic).'%')
+                    )->orWhereHas('bookshelves', fn ($b) => $b->where('name', $this->likeOperator(), '%'.trim($topic).'%')
+                    );
+                }
             });
         }
 

@@ -30,6 +30,7 @@ class BookFactory extends Factory
         return $this->afterCreating(function ($book) {
             $book->authors()->create(AuthorFactory::new()->make()->toArray());
             $book->languages()->create(LanguageFactory::new()->make()->toArray());
+            $book->languages()->create(LanguageFactory::new()->make()->toArray());
             $book->subjects()->create(SubjectFactory::new()->make()->toArray());
             $book->bookshelves()->create(BookshelfFactory::new()->make()->toArray());
             $book->formats()->create(FormatFactory::new()->make()->toArray());

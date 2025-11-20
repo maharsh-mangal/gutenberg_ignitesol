@@ -64,3 +64,25 @@ it('applies multiple filters together', function () {
         ->assertJsonStructure(['results'])
         ->assertJsonFragment(['title' => $book->title]);
 });
+
+it('supports multiple values per filter', function () {
+    $book = Book::has('languages', '>', 1)->inRandomOrder()->first();
+
+    expect($book)->not()->toBeNull();
+
+    $languages = $book->languages->pluck('code')->toArray();  // ['en', 'fr', 'de']
+    $query = implode(',', $languages);
+
+    $response = getJson("/api/books?language={$query}");
+
+    $response->assertStatus(200)
+        ->assertJsonStructure(['results']);
+
+    $resultLanguages = collect($response['results'])
+        ->flatMap(fn ($book) => $book['languages'])
+        ->pluck('code') // pick codes
+        ->unique()
+        ->toArray();
+
+    expect(array_intersect($resultLanguages, $languages))->not()->toBeEmpty();
+});
