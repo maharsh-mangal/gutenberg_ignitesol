@@ -36,7 +36,7 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/testing.sqlite
         run: |
-          php artisan migrate:fresh --seed --seeder=GutendexSeeder
+          php artisan migrate:fresh --seed
 
       - name: Run Tests
         env:
