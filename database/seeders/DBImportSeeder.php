@@ -25,9 +25,12 @@ class DBImportSeeder extends Seeder
 
         foreach ($sqlFiles as $file) {
             $path = database_path("seeders/sql/{$file}");
-            $this->command->info("Seeding: {$file}");
+            $sql  = File::get($path);
 
-            DB::unprepared(File::get($path));
+            $this->command->info("Importing {$file}...");
+            $sql = str_replace('public.', '', $sql);
+
+            DB::unprepared($sql);
         }
 
         $this->command->info("DB data seeded successfully.");
