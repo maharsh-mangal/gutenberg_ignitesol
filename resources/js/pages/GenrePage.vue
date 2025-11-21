@@ -108,16 +108,16 @@ onUnmounted(() => {
 
 <template>
     <div class="min-h-screen bg-guten-muted font-montserrat">
-        <div class="flex items-center gap-3 px-4 pt-8">
+        <div class="flex items-center gap-3 px-4 pt-8 lg:max-w-5xl lg:mx-auto">
             <BackComponent class="w-6 h-6 text-guten cursor-pointer" @click="$inertia.visit('/')" />
             <h1 class="text-2xl font-semibold text-guten">
                 {{ genre.charAt(0).toUpperCase() + genre.slice(1) }}
             </h1>
         </div>
 
-        <SearchBooks @search="applySearch" @reset="resetBooks" />
+        <SearchBooks @search="applySearch" @reset="resetBooks" class="lg:max-w-5xl lg:mx-auto mb-4"/>
 
-        <BookGrid :books="books" @open="openBook" />
+        <BookGrid :books="books" @open="openBook" class="lg:max-w-5xl lg:mx-auto lg:grid-cols-6 lg:gap-4"/>
 
         <div v-if="isLoading" class="text-center text-sm text-gray-mid py-4">
             Loading…

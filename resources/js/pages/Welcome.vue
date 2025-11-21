@@ -27,17 +27,19 @@ const navigateToGenre = (genreTitle: string) => {
 <template>
     <div class="h-screen max-w-screen bg-guten-muted">
         <div class=" bg-guten-muted bg-pattern">
-            <div class="font-montserrat px-4 pt-20 pb-6 text-5xl font-semibold text-guten">
-                Gutenberg Project
-            </div>
-            <div class="font-montserrat px-4 py-4 text-base font-semibold text-gray-dark">
-                A social cataloging website that allows you to freely search its
-                database of books, annotations, and reviews.
+            <div class="lg:max-w-5xl lg:mx-auto">
+                <div class="font-montserrat px-4 pt-20 pb-6 text-5xl font-semibold text-guten">
+                    Gutenberg Project
+                </div>
+                <div class="font-montserrat px-4 py-4 text-base font-semibold text-gray-dark">
+                    A social cataloging website that allows you to freely search its
+                    database of books, annotations, and reviews.
+                </div>
             </div>
         </div>
 
         <div
-            class="my-6 grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+            class="my-6 grid grid-cols-1 lg:grid-cols-2 lg:max-w-5xl gap-4 p-4 sm:grid-cols-2 lg:gap-8 lg:mx-auto"
         >
             <GenreCard
                 v-for="(genre, index) in genres"

@@ -17,12 +17,18 @@ function getImageUrl(book: Book) {
         <div
             v-for="book in props.books"
             :key="book.id"
-            class="cursor-pointer"
+            class="cursor-pointer flex flex-col items-center"
             @click="emit('open', book)"
         >
-            <img :src="getImageUrl(book)" alt="" class="w-full h-40 object-cover"/>
-            <div class="mt-2 text-xs text-gray-dark font-semibold truncate">{{ book.title }}</div>
+            <img :src="getImageUrl(book)" alt="" class="w-[114px] h-[162px] rounded-[8px] object-cover image-shadow"/>
+            <div class="mt-2 text-xs max-w-36 text-gray-dark font-semibold truncate">{{ book.title }}</div>
             <div class="text-[10px] text-gray-mid">{{ book.authors[0]?.name || 'Unknown Author' }}</div>
         </div>
     </div>
 </template>
+
+<style scoped>
+.image-shadow{
+    box-shadow: 0 2px 5px 0 rgba(211, 209, 238, 0.5);
+}
+</style>

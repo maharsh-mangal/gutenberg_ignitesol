@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Filters\BookFilters;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,4 +38,10 @@ class Book extends Model
     {
         return $this->hasMany(Format::class);
     }
+
+    public function scopeFilter($query, BookFilters $filters)
+    {
+        return $filters->apply($query, request());
+    }
+
 }
