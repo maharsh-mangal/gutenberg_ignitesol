@@ -23,6 +23,12 @@ class BookController extends Controller
             });
         }
 
+        //id filter
+        if ($request->filled('ids')) {
+            $ids = array_map('intval', explode(',', $request->ids));
+            $query->whereIn('gutenberg_id', $ids);
+        }
+
         // Author filter
         if ($request->filled('author')) {
             $authors = explode(',', $request->author);
