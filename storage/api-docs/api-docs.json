@@ -1,0 +1,314 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Gutenberg API",
+        "description": "API documentation for fetching books with filters",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Local API server"
+        }
+    ],
+    "paths": {
+        "/api/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get filtered books",
+                "operationId": "9017a3fa89d6636329067c858b27a6fa",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/FilterTitle"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FilterIds"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FilterAuthor"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FilterLanguages"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FilterMime"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FilterTopic"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FilterSearch"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Books retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Author": {
+                "title": "Author",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Charles Dickens"
+                    },
+                    "birth_year": {
+                        "type": "integer",
+                        "example": 1812,
+                        "nullable": true
+                    },
+                    "death_year": {
+                        "type": "integer",
+                        "example": 1870,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "BookResponse": {
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "previous": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Book"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Book": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "gutenberg_id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "download_count": {
+                        "type": "integer"
+                    },
+                    "authors": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "languages": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "code": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "formats": {
+                        "description": "Book formats & available MIME types",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "mime_type": {
+                                    "type": "string"
+                                },
+                                "url": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Bookshelf": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 4
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Adventure"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Format": {
+                "description": "Available format for a book with URL",
+                "required": [
+                    "mime_type",
+                    "url"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 45
+                    },
+                    "mime_type": {
+                        "type": "string",
+                        "example": "image/jpeg"
+                    },
+                    "url": {
+                        "type": "string",
+                        "example": "https://www.gutenberg.org/cache/epub/74/pg74.cover.medium.jpg"
+                    }
+                },
+                "type": "object"
+            },
+            "Language": {
+                "required": [
+                    "code"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "code": {
+                        "type": "string",
+                        "example": "en"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "English"
+                    }
+                },
+                "type": "object"
+            },
+            "Subject": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Children's Literature"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "parameters": {
+            "FilterTitle": {
+                "name": "title",
+                "in": "query",
+                "description": "Search by book title (min: 3 characters). Supports comma-separated multiple keywords.",
+                "schema": {
+                    "type": "string",
+                    "example": "war,peace,dawn"
+                }
+            },
+            "FilterIds": {
+                "name": "ids",
+                "in": "query",
+                "description": "Exact Gutenberg IDs — comma separated.",
+                "schema": {
+                    "type": "string",
+                    "example": "11,25,98"
+                }
+            },
+            "FilterAuthor": {
+                "name": "author",
+                "in": "query",
+                "description": "Search by author names — comma separated.",
+                "schema": {
+                    "type": "string",
+                    "example": "dickens,tolstoy"
+                }
+            },
+            "FilterLanguages": {
+                "name": "languages",
+                "in": "query",
+                "description": "Filter by language codes (ISO-2 format).",
+                "schema": {
+                    "type": "string",
+                    "example": "en,fr,es"
+                }
+            },
+            "FilterMime": {
+                "name": "mime",
+                "in": "query",
+                "description": "Filter by MIME type — partial match allowed.",
+                "schema": {
+                    "type": "string",
+                    "example": "image,text%2Fhtml"
+                }
+            },
+            "FilterTopic": {
+                "name": "topic",
+                "in": "query",
+                "description": "Search book subjects OR bookshelves.",
+                "schema": {
+                    "type": "string",
+                    "example": "children,romance"
+                }
+            },
+            "FilterSearch": {
+                "name": "search",
+                "in": "query",
+                "description": "Smart search — matches title OR author.",
+                "schema": {
+                    "type": "string",
+                    "example": "great expectations"
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Books",
+            "description": "Books"
+        }
+    ]
+}
