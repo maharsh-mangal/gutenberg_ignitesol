@@ -1,0 +1,27 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches:
+      - main  # change if your deploy branch is different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # (Optional) Install PHP dependencies before deployment
+      - name: Install PHP/Laravel Dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: "8.2" # match your composer.json
+          arguments: --no-dev --optimize-autoloader
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys
